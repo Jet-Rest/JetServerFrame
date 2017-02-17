@@ -58,10 +58,10 @@ class WebService(val jet: Jet) {
                         .filterIsInstance<WebAPIImpl>()
                         .forEach { prefix = it.prefix }
                 if (prefix == "") {
-                    serviceImpl.initAPI(router, jet.sharedVertx, jet.sharedJDBCClient)
+                    serviceImpl.initAPI(router, jet)
                 } else {
                     val subRouter: Router = Router.router(jet.sharedVertx)
-                    serviceImpl.initAPI(subRouter, jet.sharedVertx, jet.sharedJDBCClient)
+                    serviceImpl.initAPI(subRouter, jet)
                     router.mountSubRouter("/" + prefix, subRouter)
                 }
             }
