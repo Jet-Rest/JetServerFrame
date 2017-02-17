@@ -107,5 +107,15 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>codetectorRepo</id>
+            <url>http://nexus.codetector.cn/repository/codetector/</url>
+        </repository>
+        <snapshotRepository>
+            <id>codetectorRepo</id>
+            <url>http://nexus.codetector.cn/repository/codetector-staging/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

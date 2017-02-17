@@ -10,8 +10,6 @@ import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.jdbc.JDBCClient
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Created by codetector on 17/02/2017.
@@ -22,9 +20,9 @@ class Jet {
     val sharedVertx: Vertx = Vertx.vertx(VertxOptions().setWorkerPoolSize(globalConfig.getIntegerValue("workerPoolSize", 32)))
     val sharedJDBCClient: JDBCClient = JDBCClient.createShared(sharedVertx, DatabaseConfiguration.getVertXJDBCConfigObject())
     //Services
-    val dataService = DataService(sharedJDBCClient)
-    val webService = WebService(sharedVertx, sharedJDBCClient)
-    val messageService = MessageService(sharedVertx)
+    val dataService = DataService(this)
+    val webService = WebService(this)
+    val messageService = MessageService(this)
 
     fun startServer() {
         try {

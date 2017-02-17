@@ -1,6 +1,5 @@
 package cn.codetector.jet.console.consoleManager
 
-import cn.codetector.jet.console.consoleManager.ConsoleManager
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader

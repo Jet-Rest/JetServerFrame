@@ -4,20 +4,18 @@
 
 package cn.codetector.jet.webService
 
+import cn.codetector.jet.Jet
 import cn.codetector.util.Configuration.Configuration
 import cn.codetector.util.Configuration.ConfigurationManager
-import cn.codetector.jet.webService.IWebAPIImpl
-import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.core.net.JksOptions
-import io.vertx.ext.jdbc.JDBCClient
 import io.vertx.ext.web.Router
 import org.reflections.Reflections
 import java.util.*
 
-class WebService (val sharedVertx: Vertx, val jdbcClient: JDBCClient){
+class WebService(val jet: Jet) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -30,7 +28,7 @@ class WebService (val sharedVertx: Vertx, val jdbcClient: JDBCClient){
     private val sslKeyStore = config.getStringValue("SSLKeystoreFile", "key.jks")
     private val sslPassword = config.getStringValue("SSLKeystorePassword", "db_password")
 
-    private val serviceList: MutableList<IWebAPIImpl> = ArrayList<IWebAPIImpl>()
+    private val serviceList: MutableList<IWebAPIImpl> = ArrayList()
 
     private var server: HttpServer? = null
 
@@ -52,20 +50,18 @@ class WebService (val sharedVertx: Vertx, val jdbcClient: JDBCClient){
     fun initService() {
         if (!isServiceRunning) {
             logger.info("Starting WebService...")
-            val router = Router.router(sharedVertx)
+            val router = Router.router(jet.sharedVertx)
             serviceList.forEach {
                 serviceImpl ->
                 var prefix = ""
-                for (annotation in serviceImpl.javaClass.declaredAnnotations) {
-                    if (annotation is WebAPIImpl) {
-                        prefix = annotation.prefix
-                    }
-                }
+                serviceImpl.javaClass.declaredAnnotations
+                        .filterIsInstance<WebAPIImpl>()
+                        .forEach { prefix = it.prefix }
                 if (prefix == "") {
-                    serviceImpl.initAPI(router, sharedVertx, jdbcClient)
+                    serviceImpl.initAPI(router, jet.sharedVertx, jet.sharedJDBCClient)
                 } else {
-                    val subRouter: Router = Router.router(sharedVertx)
-                    serviceImpl.initAPI(subRouter, sharedVertx, jdbcClient)
+                    val subRouter: Router = Router.router(jet.sharedVertx)
+                    serviceImpl.initAPI(subRouter, jet.sharedVertx, jet.sharedJDBCClient)
                     router.mountSubRouter("/" + prefix, subRouter)
                 }
             }
@@ -73,7 +69,7 @@ class WebService (val sharedVertx: Vertx, val jdbcClient: JDBCClient){
                 ctx ->
                 ctx.response().setStatusCode(404).end("You should not land here.. Whoops!")
             }
-            server = sharedVertx.createHttpServer(HttpServerOptions()
+            server = jet.sharedVertx.createHttpServer(HttpServerOptions()
                     .setSsl(useSSL)
                     .setKeyStoreOptions(JksOptions()
                             .setPath(sslKeyStore)
@@ -84,7 +80,7 @@ class WebService (val sharedVertx: Vertx, val jdbcClient: JDBCClient){
             }.listen(httpPort, {
                 handler ->
                 this.isServiceRunning = true
-                logger.info("WebService started at Port: ${httpPort}, SSL=${useSSL}")
+                logger.info("WebService started at Port: $httpPort, SSL=$useSSL")
             })
         } else {
             logger.warn("Failed to start service : Service already running")

@@ -1,20 +1,20 @@
 package cn.codetector.jet.message
 
+import cn.codetector.jet.Jet
 import cn.codetector.util.Configuration.ConfigurationManager
 import cn.codetector.yiling.server.message.MessageTemplate
 import com.google.common.io.Resources
-import io.vertx.core.Vertx
 import io.vertx.ext.mail.MailClient
-import io.vertx.ext.mail.StartTLSOptions
 import io.vertx.ext.mail.MailConfig
 import io.vertx.ext.mail.MailMessage
+import io.vertx.ext.mail.StartTLSOptions
 import java.util.concurrent.CountDownLatch
 
 
 /**
  * Created by Codetector on 2017/2/12.
  */
-class MessageService(val sharedVertx: Vertx) {
+class MessageService(val jet: Jet) {
 
     private val mConfig = ConfigurationManager.getConfiguration("smtp.config.json")
     val config = MailConfig()
@@ -26,7 +26,7 @@ class MessageService(val sharedVertx: Vertx) {
         config.isSsl = mConfig.getBooleanValue("ssl", true)
         config.username = mConfig.getStringValue("username","user")
         config.password = mConfig.getStringValue("password","password")
-        mailClient = MailClient.createNonShared(sharedVertx, config)
+        mailClient = MailClient.createNonShared(jet.sharedVertx, config)
     }
 
     fun getTemplate(templateName: String, title: String) : MessageTemplate {

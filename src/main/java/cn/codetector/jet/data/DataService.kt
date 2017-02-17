@@ -4,8 +4,8 @@
 
 package cn.codetector.jet.data
 
+import cn.codetector.jet.Jet
 import io.vertx.core.logging.LoggerFactory
-import io.vertx.ext.jdbc.JDBCClient
 import org.reflections.Reflections
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by Codetector on 20/11/2016.
  */
-class DataService (val jdbcClient: JDBCClient) {
+class DataService(val jet: Jet) {
     val logger = LoggerFactory.getLogger(this.javaClass)
     val executors: ExecutorService = Executors.newSingleThreadExecutor()
     private val services: MutableMap<String, AbstractDataService> = HashMap<String, AbstractDataService>()
@@ -51,7 +51,7 @@ class DataService (val jdbcClient: JDBCClient) {
         logger.trace("DataServices Sorted!")
         sortedServiceList.forEach { service ->
             logger.info("Initializing ${service.serviceName()} (P:${service.loadingPriority()})...")
-            service.setDBClient(jdbcClient)
+            service.setJetInstance(jet)
         }
         load()
         executors.submit(DataServiceTicker(5000, {

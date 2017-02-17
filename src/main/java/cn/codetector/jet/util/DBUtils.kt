@@ -3,7 +3,6 @@ package cn.codetector.jet.util
 import cn.codetector.yiling.server.data.services.configuration.DatabaseConfiguration
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
-import io.vertx.core.spi.FutureFactory
 import io.vertx.ext.jdbc.JDBCClient
 
 fun doesTableExist(tableName: String, dbClient: JDBCClient, action: (AsyncResult<Boolean>) -> Unit) {
