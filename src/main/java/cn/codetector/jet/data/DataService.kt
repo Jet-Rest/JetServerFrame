@@ -120,9 +120,16 @@ class DataService(val jet: Jet) {
         load()
     }
 
+    /**
+     * @param service any object that you need some dataService to be injected in. Does not have to be a subclass of dataService. Anything could work.
+     * Inject dataService into any annotated field
+     * @see DataService
+     */
     fun injectServices(service: Any) {
         service.javaClass.declaredFields.forEach { field ->
+            logger.debug("Field found: ${field.name}:${field.type}")
             field.declaredAnnotations.forEach { annotation ->
+                logger.debug("Annotation found: ${annotation}:${field.name}")
                 if (annotation.annotationClass == DataService::class) {
                     val ann = field.getDeclaredAnnotation(DataService::class.java)
                     try {

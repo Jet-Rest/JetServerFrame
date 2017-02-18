@@ -12,9 +12,13 @@ import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.jdbc.JDBCClient
 
 /**
- * Created by codetector on 17/02/2017.
+ * Main Jet Object
  */
 class Jet {
+    init {
+        System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory")
+    }
+
     val rootLogger = LoggerFactory.getLogger("Server Root")
     val globalConfig = ConfigurationManager.getConfiguration("mainConfig.json")
     val sharedVertx: Vertx = Vertx.vertx(VertxOptions().setWorkerPoolSize(globalConfig.getIntegerValue("workerPoolSize", 32)))
@@ -24,6 +28,9 @@ class Jet {
     val webService = WebService(this)
     val messageService = MessageService(this)
 
+    /**
+     * Initialize and start the Jet server
+     */
     fun startServer() {
         try {
             dataService.start()
@@ -40,10 +47,16 @@ class Jet {
 //        MessageService.sendMessage("server@codetector.cn", template)
     }
 
+    /**
+     * Trigger a jet server-wide saving
+     */
     fun save() {
         dataService.save()
     }
 
+    /**
+     * Stop the Jet Server and exit the java application
+     */
     fun stopServer() {
         rootLogger.info("Shutting down Server")
         ConsoleManager.stop()
