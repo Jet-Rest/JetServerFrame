@@ -9,7 +9,7 @@ import cn.codetector.yiling.server.data.services.configuration.DatabaseConfigura
 import io.vertx.ext.jdbc.JDBCClient
 
 /**
- * Created by Codetector on 21/11/2016.
+ * the Abstracted dataService. Extend this class to create your own data service. (Will automatically load)
  */
 abstract class AbstractDataService {
 //    @Deprecated(message = "dbClient is deprecated please use jet.sharedJDBCClient", level = DeprecationLevel.WARNING)

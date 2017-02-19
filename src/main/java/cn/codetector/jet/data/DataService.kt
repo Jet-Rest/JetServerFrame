@@ -5,6 +5,7 @@
 package cn.codetector.jet.data
 
 import cn.codetector.jet.Jet
+import cn.codetector.jet.data.annotation.DataService
 import io.vertx.core.logging.LoggerFactory
 import org.reflections.Reflections
 import java.util.*
@@ -51,6 +52,7 @@ class DataService(val jet: Jet) {
         logger.trace("DataServices Sorted!")
         sortedServiceList.forEach { service ->
             logger.info("Initializing ${service.serviceName()} (P:${service.loadingPriority()})...")
+            injectServices(service)
             service.setJetInstance(jet)
         }
         load()
@@ -116,6 +118,35 @@ class DataService(val jet: Jet) {
 
     fun reload() {
         load()
+    }
+
+    /**
+     * @param service any object that you need some dataService to be injected in. Does not have to be a subclass of dataService. Anything could work.
+     * Inject dataService into any annotated field
+     * @see DataService
+     */
+    fun injectServices(service: Any) {
+        service.javaClass.declaredFields.forEach { field ->
+            logger.debug("Field found: ${field.name}:${field.type}")
+            field.declaredAnnotations.forEach { annotation ->
+                logger.debug("Annotation found: ${annotation}:${field.name}")
+                if (annotation.annotationClass == DataService::class) {
+                    val ann = field.getDeclaredAnnotation(DataService::class.java)
+                    try {
+                        val targetService = getService(ann.name)
+                        if (field.type.isAssignableFrom(targetService.javaClass)) {
+                            field.isAccessible = true
+                            field.set(service, targetService)
+                            logger.debug("Service injected: ${ann.name} for ${field.name} in ${service.javaClass.simpleName}")
+                        } else {
+                            logger.error("Failed to inject incompatible service ${targetService.javaClass.name} into ${field.type.name}")
+                        }
+                    } catch (e: IllegalArgumentException) {
+                        logger.error("Non-existing service @ ${field.name} in ${service.javaClass.name}")
+                    }
+                }
+            }
+        }
     }
 
     fun load() {
