@@ -47,9 +47,11 @@ class JetEventBusTest {
         JetEventBus.fireEvent("MagicEvent", JsonObject())
         Thread.sleep(50)
         assertEquals(2, testObject.getCount())
-        JetEventBus.fireEvent("TestEvent", JsonObject())
+        val magic = Random().nextInt()
+        JetEventBus.fireEvent("TestEvent", JsonObject().put("magic", magic))
         Thread.sleep(50)
         assertEquals(4, testObject.getCount())
+        assertEquals(magic, testObject.magicValue)
     }
 
 }

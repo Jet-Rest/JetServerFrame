@@ -19,6 +19,7 @@ open class EventBus(val busName: String) {
         logger.debug(MarkerFactory.getMarker("JEventBus"), "Event fired with data: ${arg.encode()}")
         Thread({
             subscribers.forEach { s ->
+                s.method.isAccessible = true
                 if (s.method.parameterCount > 0) {
                     s.method.invoke(s.target, arg)
                 } else {

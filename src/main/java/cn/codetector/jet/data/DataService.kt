@@ -127,9 +127,8 @@ class DataService(val jet: Jet) {
      */
     fun injectServices(service: Any) {
         service.javaClass.declaredFields.forEach { field ->
-            logger.debug("Field found: ${field.name}:${field.type}")
             field.declaredAnnotations.forEach { annotation ->
-                logger.debug("Annotation found: ${annotation}:${field.name}")
+                logger.trace("Annotation found: ${annotation}:${field.name}")
                 if (annotation.annotationClass == DataService::class) {
                     val ann = field.getDeclaredAnnotation(DataService::class.java)
                     try {

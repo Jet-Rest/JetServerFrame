@@ -6,7 +6,7 @@
 
     <groupId>cn.codetector</groupId>
     <artifactId>jet</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3-GAMMA</version>
 
     <properties>
         <kotlin.version>1.0.6</kotlin.version>
@@ -141,7 +141,7 @@
                 <version>${dokka.version}</version>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>javadocJar</goal>
                         </goals>

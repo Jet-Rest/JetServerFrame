@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonObject
 class BusTestObject {
 
     private var count: Int = 0
+    var magicValue = 0
 
     @EventHandler(eventName = "MagicEvent")
     fun eventBusHandler(){
@@ -24,8 +25,11 @@ class BusTestObject {
     }
 
     @EventHandler(eventName = "TestEvent")
-    fun eventBusHandler(obj: JsonObject){
+    private fun eventBusHandler(obj: JsonObject){
         count ++
+        if (obj.containsKey("magic")) {
+            magicValue = obj.getInteger("magic")
+        }
     }
 
     @EventHandler(eventName = "TestEvent")
