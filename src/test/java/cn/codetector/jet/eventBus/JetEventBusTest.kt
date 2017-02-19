@@ -23,10 +23,13 @@ class JetEventBusTest {
     @Test
     fun subscribe() {
         JetEventBus.fireEvent("MagicEvent", JsonObject())
+        Thread.sleep(50)
         assertEquals(0, testObject.getCount())
         JetEventBus.subscribe(testObject)
+        Thread.sleep(50)
         assertEquals(0, testObject.getCount())
         JetEventBus.fireEvent("MagicEvent", JsonObject())
+        Thread.sleep(50)
         assertEquals(1, testObject.getCount())
     }
 
@@ -39,10 +42,13 @@ class JetEventBusTest {
     fun fireEvent() {
         JetEventBus.subscribe(testObject)
         JetEventBus.fireEvent("MagicEvent", JsonObject())
+        Thread.sleep(50)
         assertEquals(1, testObject.getCount())
         JetEventBus.fireEvent("MagicEvent", JsonObject())
+        Thread.sleep(50)
         assertEquals(2, testObject.getCount())
         JetEventBus.fireEvent("TestEvent", JsonObject())
+        Thread.sleep(50)
         assertEquals(4, testObject.getCount())
     }
 
