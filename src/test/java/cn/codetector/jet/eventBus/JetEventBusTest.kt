@@ -1,12 +1,11 @@
 package cn.codetector.jet.eventBus
 
 import io.vertx.core.json.JsonObject
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-import org.junit.Assert.*
-import org.junit.Before
-import java.util.*
 
 /**
  * Created by codetector on 18/02/2017.
@@ -14,7 +13,7 @@ import java.util.*
 class JetEventBusTest {
     private var testObject = BusTestObject()
 
-    @Before
+    @BeforeEach
     fun setUp() {
         testObject.resetCounter()
         JetEventBus.hashCode()
@@ -33,7 +32,7 @@ class JetEventBusTest {
         assertEquals(1, testObject.getCount())
     }
 
-    @After
+    @AfterEach
     fun tearDown() {
         testObject.resetCounter()
     }
