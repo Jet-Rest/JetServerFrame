@@ -5,6 +5,7 @@
 package cn.codetector.jet.webService
 
 import cn.codetector.jet.Jet
+import cn.codetector.jet.data.DataService
 import cn.codetector.util.Configuration.Configuration
 import cn.codetector.util.Configuration.ConfigurationManager
 import io.vertx.core.http.HttpServer
@@ -57,6 +58,7 @@ class WebService(val jet: Jet) {
                 serviceImpl.javaClass.declaredAnnotations
                         .filterIsInstance<WebAPIImpl>()
                         .forEach { prefix = it.prefix }
+                jet.dataService.injectServices(serviceImpl)
                 if (prefix == "") {
                     serviceImpl.initAPI(router, jet)
                 } else {

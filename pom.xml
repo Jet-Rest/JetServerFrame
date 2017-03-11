@@ -6,7 +6,7 @@
 
     <groupId>cn.codetector</groupId>
     <artifactId>jet</artifactId>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
 
     <properties>
         <kotlin.version>1.1.0</kotlin.version>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>cn.codetector</groupId>
             <artifactId>util</artifactId>
-            <version>1.5</version>
+            <version>1.5.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
