@@ -6,7 +6,7 @@
 
     <groupId>cn.codetector</groupId>
     <artifactId>jet</artifactId>
-    <version>0.3-DELTA</version>
+    <version>0.3.1-SNAPSHOT</version>
 
     <properties>
         <kotlin.version>1.1.0</kotlin.version>
